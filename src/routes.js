@@ -1,13 +1,23 @@
+// Router
 import { Router } from "express";
+
+//Middlewares
+import  auth  from "./middlewares/auth";
+
+//Controllers
 import  helloController  from "./controllers/helloController";
 import  UsersController  from "./controllers/UsersController";
 import  RepositoriesController from "./controllers/RepositoriesController";
+import SessionController from "./controllers/SessionsController";
 
 const routes = new Router();
 
-routes.get("/", (req, res) => {
-    return helloController(req, res);
-});
+// Rotas Públicas
+routes.put('/', SessionController.create);
+
+
+//Rotas Privadas
+routes.use(auth);
 
 //RESTFULL
 //criar uma API de usuários
