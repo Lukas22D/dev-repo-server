@@ -13,7 +13,9 @@ import SessionController from "./controllers/SessionsController";
 const routes = new Router();
 
 // Rotas Públicas
-routes.put('/', SessionController.create);
+routes.put('/session', SessionController.create);
+routes.post('/users', UsersController.create);
+
 
 
 //Rotas Privadas
@@ -23,7 +25,6 @@ routes.use(auth);
 //criar uma API de usuários
 routes.get('/users', UsersController.index);
 routes.get('/users/:id', UsersController.show);
-routes.post('/users', UsersController.create);
 routes.put('/users/:id', UsersController.update);
 routes.delete('/users/:id', UsersController.delete);
 

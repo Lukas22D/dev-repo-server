@@ -6,14 +6,21 @@ class RepositoriesController {
     async index(req, res) {
         try{
             const { user_id } = req.params;
+            const { q } = req.query;
 
             const user = await User.findById(user_id);
             if(!user) {
                 return res.status(404).json({error: "Usuário não encontrado"});
             }
+            
+            let query = {};
+            if(q) {
+                query = {url: {$regex: q}};
+
+            }
 
             // Busca os repositórios do usuário
-            const repositories = await Repository.find({userId: user_id});
+            const repositories = await Repository.find({userId: user_id, ...query});
 
             return res.json(repositories);
 
@@ -36,7 +43,7 @@ class RepositoriesController {
             }
 
             //Verefica se o Repostório já existe
-            const repository = await Repository.findOne({name, userId: user_id});
+            const repository = await Repository.findOne({url, userId: user_id});
 
             if(repository) {
                 return res.status(422).json({error: "Repositório já existe"});
@@ -58,8 +65,9 @@ class RepositoriesController {
             if(!user) {
                 return res.status(404).json({error: "Usuário não encontrado"});
             }
-            const repository = await Repository.findOne({userId: user_id, id})
-
+            // Busca o repositório do usuário
+            const repository = await Repository.findOne({userId: user_id, _id: id});
+            
             if(!repository) {
                 return res.status(404).json({error: "Repositório não encontrado"});
             }
